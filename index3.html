@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Daily Gazette | Kshitiz Srivastava</title>
+    <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --aged-paper: #F4EFE6;
+            --ink-black: #1E1D1A;
+            --faded-ink: #4E4A42;
+            --accent-crimson: #8B263E;
+            --news-border: 1px solid #1E1D1A;
+            --double-border: 4px double #1E1D1A;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #E2DBD0;
+            /* Authentic printing press paper texture */
+            background-image: radial-gradient(rgba(0,0,0,0.03) 15%, transparent 16%),
+                              radial-gradient(rgba(0,0,0,0.01) 15%, transparent 16%);
+            background-size: 6px 6px;
+            background-position: 0 0, 3px 3px;
+            color: var(--ink-black);
+            padding: 30px 15px;
+            font-family: 'Chivo Mono', monospace;
+            line-height: 1.4;
+        }
+
+        /* Broadsheet Container */
+        .broadsheet {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--aged-paper);
+            padding: 30px;
+            border: var(--news-border);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        /* Newspaper Masthead */
+        header {
+            text-align: center;
+            border-bottom: var(--double-border);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .edition-bar {
+            border-top: var(--news-border);
+            border-bottom: var(--news-border);
+            padding: 6px 0;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allows sections to cleanly wrap on ultra-small screens */
+            gap: 10px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .edition-bar > span {
+            flex: 1 1 auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'UnifrakturMaguntia', serif;
+            font-size: clamp(2.5rem, 8vw, 5.5rem); /* Dynamically scales font sizes based on screen real estate */
+            font-weight: 400;
+            line-height: 1;
+            color: var(--ink-black);
+            word-wrap: break-word;
+        }
+
+        .motto {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            color: var(--faded-ink);
+            margin-top: 5px;
+        }
+
+        /* Multi-Column Press Layout */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 25px;
+        }
+
+        .article {
+            grid-column: span 8;
+            border-right: var(--news-border);
+            padding-right: 25px;
+        }
+
+        .classifieds {
+            grid-column: span 4;
+        }
+
+        /* Responsive Breakpoint for Main Structure */
+        @media (max-width: 900px) {
+            .article {
+                grid-column: span 12;
+                border-right: none;
+                padding-right: 0;
+                border-bottom: var(--news-border);
+                padding-bottom: 20px;
+                margin-bottom: 10px;
+            }
+            .classifieds {
+                grid-column: span 12;
+            }
+        }
+
+        /* Secondary nested grids */
+        .inner-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 650px) {
+            .inner-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Headline Styles */
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            border-bottom: var(--news-border);
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            color: var(--accent-crimson);
+        }
+
+        /* Engraving Halftone Photo Box */
+        .daguerreotype-frame {
+            width: 100%;
+            border: var(--news-border);
+            padding: 8px;
+            background: #fff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* RESPONSIVE IMAGE CONTROLS */
+        .daguerreotype-frame img {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            max-height: 320px;
+            object-fit: cover;
+            /* Pure vintage ink profile rendering */
+            filter: grayscale(100%) contrast(140%) brightness(95%);
+            mix-blend-mode: multiply;
+        }
+
+        @media (max-width: 900px) {
+            .daguerreotype-frame {
+                max-width: 280px; /* Centers and constraints size on tablet/desktop stacked screens */
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        .caption {
+            font-size: 0.7rem;
+            font-style: italic;
+            margin-top: 6px;
+            color: var(--faded-ink);
+        }
+
+        /* Text Columns */
+        .editorial-columns {
+            columns: 2;
+            column-gap: 25px;
+            font-size: 0.85rem;
+            text-align: justify;
+            color: var(--faded-ink);
+        }
+
+        @media (max-width: 600px) { 
+            .editorial-columns { 
+                columns: 1; 
+            } 
+        }
+
+        .editorial-columns::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            float: left;
+            line-height: 0.8;
+            padding-right: 8px;
+            color: var(--ink-black);
+            font-weight: 900;
+        }
+
+        /* Classified Notice Blocks */
+        .notice-block {
+            border: var(--news-border);
+            padding: 15px;
+            margin-bottom: 20px;
+            background: rgba(0,0,0,0.02);
+            word-wrap: break-word;
+        }
+
+        .notice-block:nth-child(even) {
+            border: 2px dashed var(--ink-black);
+        }
+
+        .bulletin-row {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.8rem;
+        }
+        .bulletin-row:last-child { border: none; }
+
+        /* Retro Navigation Items */
+        .vintage-links a {
+            display: block;
+            color: var(--ink-black);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.85rem;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--ink-black);
+        }
+        .vintage-links a:hover { color: var(--accent-crimson); }
+
+        /* Official Print Action Button for Resume */
+        .action-print-btn {
+            display: block;
+            margin-top: 15px;
+            padding: 10px;
+            background: var(--ink-black);
+            color: var(--aged-paper);
+            text-align: center;
+            text-decoration: none;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.85rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            border: 2px solid var(--ink-black);
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+        }
+        
+        .action-print-btn:hover {
+            background: var(--accent-crimson);
+            border-color: var(--accent-crimson);
+            color: #fff;
+        }
+
+        /* Print Typography Badges */
+        .type-cluster {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .type-badge {
+            border: var(--news-border);
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            background: #fff;
+        }
+
+        /* Press Dispatch Modal */
+        .telegraph-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(30, 29, 26, 0.7);
+            backdrop-filter: blur(2px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .telegram-box {
+            background: var(--aged-paper);
+            border: 3px solid var(--ink-black);
+            max-width: 550px;
+            width: 100%;
+            padding: 40px 30px 30px 30px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .telegram-box::before {
+            content: 'URGENT DESPATCH';
+            position: absolute;
+            top: -12px; left: 20px;
+            background: var(--accent-crimson);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            font-weight: bold;
+        }
+
+        .close-press {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: none;
+            border: var(--news-border);
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .wire-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 8px 16px;
+            background: var(--ink-black);
+            color: var(--aged-paper);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            max-width: 100%;
+            text-align: center;
+        }
+        .wire-btn:hover { background: var(--accent-crimson); }
+
+        /* Media adjustments for padding layout scale */
+        @media (max-width: 600px) {
+            body { padding: 10px 5px; }
+            .broadsheet { padding: 15px; }
+            .news-grid { gap: 15px; }
+        }
+
+        footer {
+            margin-top: 20px;
+            border-top: var(--double-border);
+            padding-top: 15px;
+            text-align: center;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--faded-ink);
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="broadsheet">
+        
+        <header>
+            <h1>The Daily Gazette</h1>
+            <div class="motto">"Truth, Logic, and Automated Systems without Compromise"</div>
+            
+            <div class="edition-bar">
+                <span>Vol. CXXVI No. 42</span>
+                <span id="live-press-date">Loading Edition Date...</span>
+                <span>Price: Two Cents</span>
+            </div>
+        </header>
+
+        <div class="news-grid">
+            
+            <div class="article">
+                <article style="margin-bottom: 30px;">
+                    <h2>Srivastava Proposes New Computing Paradigms in Artificial Intelligence</h2>
+                    <p style="font-style: italic; color: var(--faded-ink); font-size: 0.9rem; margin-bottom: 15px;">By Our Engineering Correspondent</p>
+                    
+                    <div class="editorial-columns">
+                        Computer Science scholar Kshitiz Srivastava, currently engineering core solutions at the GL Bajaj Institute of Technology and Management, has reported significant benchmarks within architectural system automation. Specializing directly in machine learning logics and robust computational designs, Srivastava has solidified foundations in compiled Java execution layers and discrete database manipulation. Efforts continue on building highly adaptive algorithmic models meant to optimize standard human-to-digital infrastructure.
+                    </div>
+                </article>
+
+                <div style="border-top: var(--news-border); padding-top: 20px;">
+                    <div class="inner-grid">
+                        <div>
+                            <h3>Latest Circular dispatches</h3>
+                            
+                            <div class="notice-block" style="cursor: pointer;" onclick="openModal('Public Issue Reporting Website', 'Developed a web-based complaint reporting platform using HTML, CSS, JavaScript, and MySQL. Implemented a real-time monitoring system to track complaint status and designed an optimized MySQL database backend for highly efficient issue management.', 'https://kshitizsrivastava29.github.io/project1_public_issue_reporting_website.io/')">
+                                <h4 style="font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 5px;">I. PUBLIC REGISTRY INDEX</h4>
+                                <p style="font-size: 0.8rem; color: var(--faded-ink);">A community complaint dashboard rendering operations live across local jurisdictions.</p>
+                                <span style="font-size: 0.7rem; font-weight: bold; color: var(--accent-crimson);">READ RECORD ➔</span>
+                            </div>
+
+                            <div class="notice-block" style="cursor: pointer;" onclick="openModal('Notes Sharing Platform', 'Built a web-based notes sharing platform enabling students to upload, categorize, and search study materials collaboratively using HTML, CSS, and JavaScript.', 'https://github.com/kshitizSrivastava29')">
+                                <h4 style="font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 5px;">II. COMPENDIUM LEDGER</h4>
+                                <p style="font-size: 0.8rem; color: var(--faded-ink);">Collaborative file routing systems built completely native around academic categorization.</p>
+                                <span style="font-size: 0.7rem; font-weight: bold; color: var(--accent-crimson);">READ RECORD ➔</span>
+                            </div>
+                            
+                        </div>
+
+                        <div>
+                            <h3>Supplemental Prints</h3>
+                            <div class="notice-block" style="cursor: pointer;" onclick="openModal('Portfolio Website', 'Designed and developed a responsive and interactive custom personal portfolio website to showcase dynamic projects and engineering skillsets.', 'https://github.com/kshitizSrivastava29')">
+                                <h4 style="font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 5px;">III. EDITORIAL PORTFOLIO</h4>
+                                <p style="font-size: 0.8rem; color: var(--faded-ink);">A customized broadsheet layout projecting records of scholastic engineering capabilities.</p>
+                                <span style="font-size: 0.7rem; font-weight: bold; color: var(--accent-crimson);">READ RECORD ➔</span>
+                            </div>
+
+                            <div class="daguerreotype-frame" style="margin: 0;">
+                                <div style="border: 1px dashed rgba(0,0,0,0.2); padding: 15px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.9rem;">
+                                    "The analytical engine weaves algebraic patterns just as the Jacquard loom weaves flowers."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="classifieds">
+                
+                <h3 style="text-align: center; border-bottom: 4px double var(--ink-black);">The Classified Bulletins</h3>
+                
+                <div class="daguerreotype-frame">
+                    <img src="My_New_Photo.jpeg" alt="Srivastava Portrait Print">
+                    <div class="caption">Fig 1. Kshitiz Srivastava, Operator.</div>
+                </div>
+
+                <div class="notice-block">
+                    <h4 style="font-family: 'Playfair Display', serif; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 8px;">Telegraphic Links</h4>
+                    <div class="vintage-links">
+                        <a href="mailto:srivastava.kshitiz05@gmail.com">🖂 srivastava.kshitiz05@gmail.com</a>
+                        <a href="https://github.com/kshitizSrivastava29" target="_blank">🖍 GitHub Archive Trunk</a>
+                        <a href="https://leetcode.com/u/Kshitiz_Srivastava05/" target="_blank">🖎 Leetcode Log Ledger</a>
+                    </div>
+                    <!-- Official Resume Request Button inserted here for symmetry -->
+                    <a href="My_Resume (5).pdf" download class="action-print-btn">🖺 Order Profile Print</a>
+                </div>
+
+                <div class="notice-block">
+                    <h4 style="font-family: 'Playfair Display', serif; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 5px;">Academic Standing</h4>
+                    <div style="font-size: 0.8rem; line-height: 1.4;">
+                        <b>B.Tech CSE (AI &amp; ML)</b><br>
+                        GL Bajaj Institute of Tech.<br>
+                        <span style="color: var(--accent-crimson); font-weight: bold;">Yield: 8.57 CGPA (2024-2028)</span>
+                        <div style="margin-top: 8px; border-top: 1px dashed #000; padding-top: 5px;">
+                            <b>Intermediate Matrix:</b> 86.8% // 2024<br>
+                            <b>High School Matrix:</b> 91.4% // 2022
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notice-block">
+                    <h4 style="font-family: 'Playfair Display', serif; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 5px;">Typesetting Inventory</h4>
+                    <div class="type-cluster">
+                        <span class="type-badge">Java</span><span class="type-badge">C</span><span class="type-badge">Python</span>
+                        <span class="type-badge">HTML5</span><span class="type-badge">CSS3</span><span class="type-badge">JavaScript</span>
+                        <span class="type-badge">MySQL</span><span class="type-badge">Git</span><span class="type-badge">DSA Logic</span>
+                    </div>
+                </div>
+             
+            <div class="span-12" style="grid-column: span 12; border-top: var(--double-border); padding-top: 15px;">
+                <h3 style="border: none; margin: 0 0 10px 0; font-size: 1.1rem;">Verified Field Achievements &amp; Press Dispatches</h3>
+                <div class="inner-grid">
+                    <div class="notice-block" style="margin: 0;">
+                        <div class="bulletin-row"><b>[ITEM 01]</b> Resolved 200+ mathematical properties cleanly within Leetcode logic engines.</div>
+                        <div class="bulletin-row"><b>[ITEM 02]</b> Logged 70+ validation test assertions inside GeeksforGeeks profiles.</div>
+                    </div>
+                    <div class="notice-block" style="margin: 0;">
+                        <div class="bulletin-row"><b>[ITEM 03]</b> Prepared custom automated pipelines for Smart India Hackathon (SIH) 2025 orbit.</div>
+                        <div class="bulletin-row"><b>[ITEM 04]</b> Granted official validation access clearance for the Daksh Hackathon cluster.</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>All Content Transmitted and Proofed by Printing House Operators // © 2026 Kshitiz Srivastava. Final Edition.</p>
+        </footer>
+
+    </div>
+
+    <div id="projectModal" class="telegraph-overlay" onclick="closeModal()">
+        <div class="telegram-box" onclick="event.stopPropagation()">
+            <button class="close-press" onclick="closeModal()">✕ CLOSE</button>
+            <h2 id="modalTitle" style="font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 15px; text-transform: uppercase;">Telegram Dispatch</h2>
+            <p id="modalDescription" style="font-size: 0.85rem; line-height: 1.5; color: var(--faded-ink); font-family: 'Chivo Mono', monospace;"></p>
+            <a id="modalProjectLink" href="#" target="_blank" class="wire-btn">Follow Cable Connection</a>
+        </div>
+    </div>
+
+    <script>
+        // Live Date Generation Script
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date();
+            
+            // Format to match editorial layout (e.g., "Tuesday, June 16, 2026")
+            let formattedDate = today.toLocaleDateString('en-US', dateOptions);
+            
+            document.getElementById('live-press-date').innerText = "Patna, Bihar — " + formattedDate;
+        });
+
+        function openModal(title, description, projectUrl) {
+            document.getElementById('modalTitle').innerText = "STOP // " + title;
+            document.getElementById('modalDescription').innerText = description + " // STOP.";
+            const wireLink = document.getElementById('modalProjectLink');
+            if (projectUrl) {
+                wireLink.href = projectUrl;
+                wireLink.style.display = 'inline-block';
+            } else {
+                wireLink.style.display = 'none';
+            }
+            document.getElementById('projectModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('projectModal').style.display = 'none';
+        }
+
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+        
+    </script>
+</body>
+</html>
